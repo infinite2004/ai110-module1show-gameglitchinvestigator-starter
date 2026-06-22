@@ -52,13 +52,14 @@ $ pytest
 platform darwin -- Python 3.11.7, pytest-7.4.0, pluggy-1.0.0
 rootdir: /Users/abdulrahmanqureshi/Downloads/ai110-module1show-gameglitchinvestigator-starter-main
 plugins: anyio-3.7.1
-collected 4 items
+collected 7 items
 
+tests/test_edge_cases.py ...                                             [ 42%]
 tests/test_game_logic.py ....                                            [100%]
 
-============================== 4 passed in 0.02s ===============================
+============================== 7 passed in 0.02s ===============================
 ```
 
 ## 🚀 Stretch Features
 
-- [ ] [If you choose to complete Challenge 4, describe the Enhanced UI changes here — a screenshot is optional]
+- [x] Challenge 1: Advanced Edge-Case Testing. I added pytest coverage for blank input, negative guesses, and extremely large guesses in `tests/test_edge_cases.py`. These tests confirm that invalid or unusual inputs are handled gracefully without breaking the game logic.
