@@ -21,6 +21,26 @@ Document at least 3 bugs you found. Add rows as needed.
 | guess of 70 | Too High | Too Low / wrong hint | none |
 | guess of 100 | Too High | You already won, start a new game | none |
 | guess of 54 | Too Low | Game over, start a new game and try again | none |
+| decimal guess of 54.7 | Clear error saying the guess must be a whole number | Input could be treated like a different number or handled unclearly | none |
+
+**Manual Run Trace**
+
+```text
+Opened the Streamlit app and used Developer Debug Info to inspect the secret number.
+Game event 1: entered 70 while the secret was lower than 70.
+Expected: "Too High" / "Go LOWER!"
+Observed before fix: the game showed the wrong high/low feedback.
+
+Game event 2: finished a game, then clicked New Game.
+Expected: attempts, score, status, and history reset for a fresh game.
+Observed before fix: old won/lost status and history could still affect the next round.
+
+Game event 3: entered 54.7 as a guess.
+Expected: the app rejects the guess as not being a whole number.
+Observed before fix: decimal input was not handled clearly as invalid input.
+```
+
+The code-level causes were in the game logic and session-state handling. The high/low bug came from the comparison logic that now lives in `logic_utils.check_guess`, where a guess greater than the secret must return "Too High" and "Go LOWER!". The stale game bug came from `start_new_game` in `app.py`, because a new game needs to reset `secret`, `attempts`, `score`, `status`, and `history` together. The input bug came from guess parsing, so I moved that responsibility into `logic_utils.parse_guess` and made invalid whole-number input return a clear error.
 
 ---
 
@@ -30,7 +50,7 @@ Document at least 3 bugs you found. Add rows as needed.
 - Give one example of an AI suggestion that was correct (including what the AI suggested and how you verified the result).
 - Give one example of an AI suggestion that was incorrect or misleading (including what the AI suggested and how you verified the result).
 
-I used Codex as my AI coding teammate to inspect `app.py`, `logic_utils.py`, and the pytest file. A correct suggestion was to move `check_guess`, `parse_guess`, `get_range_for_difficulty`, and `update_score` into `logic_utils.py` so the game logic could be tested separately from the Streamlit UI. I verified this by checking that `app.py` imported the functions from `logic_utils.py` and by running pytest.
+I used Codex as my AI coding teammate to inspect `app.py`, `logic_utils.py`, and the pytest file. One AI-generated explanation was that the hint bug was not just a wording problem: the comparison path needed to treat `guess > secret` as "Too High" and tell the player to go lower, while `guess < secret` should tell the player to go higher. A correct suggestion was to move `check_guess`, `parse_guess`, `get_range_for_difficulty`, and `update_score` into `logic_utils.py` so the game logic could be tested separately from the Streamlit UI. I verified this by checking that `app.py` imported the functions from `logic_utils.py` and by running pytest.
 
 One misleading result was that the app first looked like it was not starting correctly, but the real issue was the sandbox blocking Streamlit's local server and file watcher. I verified this by reading the terminal error, then running Streamlit with an explicit localhost address and polling file watching. That showed me the problem was the run environment, not the game logic itself.
 
