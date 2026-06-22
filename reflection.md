@@ -53,6 +53,8 @@ I also tested that decimal guesses are rejected instead of silently being conver
 
 - How would you explain Streamlit "reruns" and session state to a friend who has never used Streamlit?
 
+I learned that Streamlit reruns the whole script from top to bottom whenever a user interacts with a widget, like clicking a button or changing an input. That means normal Python variables can get recreated unless the app stores important values in `st.session_state`. I would explain session state as the app's memory between reruns, because it keeps things like the secret number, attempts, score, status, and history from disappearing or changing at the wrong time. This project helped me understand why a game can look random or broken if state is initialized in the wrong place.
+
 ---
 
 ## 5. Looking ahead: your developer habits
@@ -61,3 +63,7 @@ I also tested that decimal guesses are rejected instead of silently being conver
   - This could be a testing habit, a prompting strategy, or a way you used Git.
 - What is one thing you would do differently next time you work with AI on a coding task?
 - In one or two sentences, describe how this project changed the way you think about AI generated code.
+
+One strategy I want to reuse is writing down the exact bug reproduction before changing code. It made the fixes easier to check because I could compare the old wrong behavior with the expected behavior. I also want to keep asking AI for small, testable suggestions instead of accepting a big answer all at once.
+
+Next time, I would ask the AI to separate code problems from environment problems earlier. In this project, one misleading moment was when Streamlit looked like it was failing because of the app, but the real problem was the sandbox and the old launcher command. This project changed the way I think about AI generated code because I saw that AI can be very useful, but I still have to verify its ideas with tests, terminal output, and the live app.

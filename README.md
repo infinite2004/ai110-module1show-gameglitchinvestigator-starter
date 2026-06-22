@@ -25,28 +25,38 @@ It wrote the code, ran away, and now the game is unplayable.
 
 ## 📝 Document Your Experience
 
-- [ ] Describe the game's purpose.
-- [ ] Detail which bugs you found.
-- [ ] Explain what fixes you applied.
+- [x] The game is a Streamlit number guessing game where the player chooses a difficulty, enters guesses, receives higher/lower hints, and tries to find the secret number before running out of attempts.
+- [x] I found that the high/low hints were reversed, old won/lost state could carry into a new game, and invalid decimal guesses were not handled clearly.
+- [x] I fixed the guess comparison logic, reset all important `st.session_state` fields when a new game starts, moved reusable logic into `logic_utils.py`, and added pytest coverage for the repaired behavior.
 
 ## 📸 Demo Walkthrough
 
-Describe your fixed game in numbered steps so a reader can follow along without watching a video:
+The fixed game now behaves like this from start to finish:
 
-1. <!-- Describe this step -->
-2. <!-- Describe this step -->
-3. <!-- Describe this step -->
-4. <!-- Describe this step -->
-5. <!-- Add more steps as needed -->
-
-**Screenshot** *(optional)*: <!-- Insert a screenshot of your fixed, winning game here -->
+1. User opens the Streamlit app and selects Normal difficulty, which sets the range to 1 through 100 with 8 attempts.
+2. User enters a guess of 40 when the secret number is 50.
+3. Game returns "Too Low" and shows the hint "Go HIGHER!", then subtracts 5 points.
+4. User enters a guess of 60.
+5. Game returns "Too High" and shows the hint "Go LOWER!", then subtracts 5 more points.
+6. User enters a decimal guess such as 54.7.
+7. Game rejects the input with "That is not a whole number." instead of silently changing the guess.
+8. User enters the correct guess of 50.
+9. Game returns "Correct!", marks the status as won, shows the final score, and stops accepting more guesses until New Game is pressed.
+10. User presses New Game, and the app clears the old attempts, score, status, and guess history before starting again.
 
 ## 🧪 Test Results
 
 ```
-# Paste your pytest output here, e.g.:
-# pytest tests/
-# ========================= X passed in 0.XXs =========================
+$ pytest
+============================= test session starts ==============================
+platform darwin -- Python 3.11.7, pytest-7.4.0, pluggy-1.0.0
+rootdir: /Users/abdulrahmanqureshi/Downloads/ai110-module1show-gameglitchinvestigator-starter-main
+plugins: anyio-3.7.1
+collected 4 items
+
+tests/test_game_logic.py ....                                            [100%]
+
+============================== 4 passed in 0.02s ===============================
 ```
 
 ## 🚀 Stretch Features
